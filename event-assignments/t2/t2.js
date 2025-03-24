@@ -772,7 +772,7 @@ const restaurants = [
 
 // your code here
 const taulukko = document.querySelector('#target');
-let edellinenHighlight;
+const modal = document.querySelector('#modal');
 
 // restaurants aakkosjärjestykseen
 restaurants.sort(function (a, b) {
@@ -784,12 +784,33 @@ for (const restaurant of restaurants) {
   const tr = document.createElement('tr');
 
   tr.addEventListener('click', function () {
-    if (edellinenHighlight) {
-      edellinenHighlight.classList.remove('highlight');
+    for (const elem of document.querySelectorAll('.highlight')) {
+      elem.classList.remove('highlight');
     }
+
     tr.classList.add('highlight');
-    edellinenHighlight = tr;
-    console.log(edellinenHighlight);
+
+    // tyhjennä modal
+    modal.innerHTML = '';
+    //avaa modal
+    modal.showModal();
+    //modalin sisältö
+    const nameH3 = document.createElement('h3');
+    nameH3.innerText = restaurant.name;
+
+    const addressP = document.createElement('p');
+    addressP.innerText = restaurant.address;
+
+    const cityP = document.createElement('p');
+    cityP.innerText = restaurant.city;
+
+    const postalP = document.createElement('p');
+    postalP.innerText = restaurant.postalCode;
+
+    const phoneP = document.createElement('p');
+    phoneP.innerText = restaurant.phone;
+
+    modal.append(nameH3, addressP, cityP, postalP, phoneP);
   });
   //nimisolu
   const nameTd = document.createElement('td');
