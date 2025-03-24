@@ -771,3 +771,39 @@ const restaurants = [
 ];
 
 // your code here
+const taulukko = document.querySelector('#target');
+let edellinenHighlight;
+
+// restaurants aakkosjärjestykseen
+restaurants.sort(function (a, b) {
+  return a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
+});
+
+for (const restaurant of restaurants) {
+  // rivi
+  const tr = document.createElement('tr');
+
+  tr.addEventListener('click', function () {
+    if (edellinenHighlight) {
+      edellinenHighlight.classList.remove('highlight');
+    }
+    tr.classList.add('highlight');
+    edellinenHighlight = tr;
+    console.log(edellinenHighlight);
+  });
+  //nimisolu
+  const nameTd = document.createElement('td');
+  nameTd.innerText = restaurant.name;
+
+  //osoitesolu
+  const addressTd = document.createElement('td');
+  addressTd.innerText = restaurant.address;
+  //kaupunkisolu
+  const cityTd = document.createElement('td');
+  cityTd.innerText = restaurant.city;
+
+  //lisätään solut riviin
+  tr.append(nameTd, addressTd, cityTd);
+
+  taulukko.append(tr);
+}
