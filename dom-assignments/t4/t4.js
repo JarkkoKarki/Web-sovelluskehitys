@@ -1,3 +1,5 @@
+import {distance} from '../lib/euclidean.js';
+
 const restaurants = [
   {
     location: {type: 'Point', coordinates: [25.018456, 60.228982]},
@@ -771,3 +773,49 @@ const restaurants = [
 ];
 
 // your code here
+
+const taulukko = document.querySelector('#target');
+
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
+
+function success(pos) {
+  const crd = pos.coords;
+  console.log(crd);
+  const alkupiste = [crd.longitude, crd.latitude];
+  restaurants.sort(function (a, b) {
+    return (
+      distance(alkupiste, a.location.coordinates) -
+      distance(alkupiste, b.location.coordinates)
+    );
+  });
+
+  for (const restaurant of restaurants) {
+    // rivi
+    const tr = document.createElement('tr');
+    //nimisolu
+    const nameTd = document.createElement('td');
+    nameTd.innerText = restaurant.name;
+
+    //osoitesolu
+    const addressTd = document.createElement('td');
+    addressTd.innerText = restaurant.address;
+    //kaupunkisolu
+    const cityTd = document.createElement('td');
+    cityTd.innerText = restaurant.city;
+
+    //lisätään solut riviin
+    tr.append(nameTd, addressTd, cityTd);
+
+    taulukko.append(tr);
+  }
+}
+
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+navigator.geolocation.getCurrentPosition(success, error, options);
