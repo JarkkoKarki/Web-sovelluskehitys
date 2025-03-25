@@ -69,7 +69,11 @@ async function getRestaurants() {
 //hae tietyn ravintolan päivän menu
 
 async function getDailyMenu(id, lang) {
-  return await fetchData(`${apiUrl}/restaurants/daily/${id}/${lang}`);
+  try {
+    return await fetchData(`${apiUrl}/restaurants/daily/${id}/${lang}`);
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 // restaurants aakkosjärjestykseen
 
@@ -85,24 +89,28 @@ function createTable() {
     const tr = document.createElement('tr');
 
     tr.addEventListener('click', async function () {
-      for (const elem of document.querySelectorAll('.highlight')) {
-        elem.classList.remove('highlight');
+      try {
+        for (const elem of document.querySelectorAll('.highlight')) {
+          elem.classList.remove('highlight');
+        }
+
+        tr.classList.add('highlight');
+        //hae menu
+        const coursesResponse = await getDailyMenu(restaurant._id, 'fi');
+        // hae menu html
+        const menuHtml = createMenuHtml(coursesResponse.courses);
+        // tyhjennä modal
+        modal.innerHTML = '';
+        //luo modal
+        createModalHtml(restaurant, modal);
+        //lisää menu html
+        modal.insertAdjacentHTML('beforeend', menuHtml);
+
+        //avaa modal
+        modal.showModal();
+      } catch (error) {
+        console.error(error.message);
       }
-
-      tr.classList.add('highlight');
-      //hae menu
-      const coursesResponse = await getDailyMenu(restaurant._id, 'fi');
-      // hae menu html
-      const menuHtml = createMenuHtml(coursesResponse.courses);
-      // tyhjennä modal
-      modal.innerHTML = '';
-      //luo modal
-      createModalHtml(restaurant, modal);
-      //lisää menu html
-      modal.insertAdjacentHTML('beforeend', menuHtml);
-
-      //avaa modal
-      modal.showModal();
     });
 
     createRestaurantCells(restaurant, tr);
@@ -111,9 +119,13 @@ function createTable() {
 }
 
 async function main() {
-  await getRestaurants();
-  sortRestaurants();
-  createTable();
+  try {
+    await getRestaurants();
+    sortRestaurants();
+    createTable();
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 main();
