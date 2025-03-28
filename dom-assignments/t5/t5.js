@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const restaurants = [
   {
     location: {type: 'Point', coordinates: [25.018456, 60.228982]},
@@ -769,5 +770,61 @@ const restaurants = [
     __v: 0,
   },
 ];
+console.log(restaurants);
 
 // your code here
+let modal;
+var map;
+
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
+
+function success(pos) {
+  const crd = pos.coords;
+  console.log(crd);
+  map = L.map('map').setView([crd.latitude, crd.longitude], 12);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  for (const restaurant of restaurants) {
+    const marker = L.marker([
+      restaurant.location.coordinates[1],
+      restaurant.location.coordinates[0],
+    ])
+      .addTo(map)
+      .bindPopup(restaurant.name);
+    marker.on('click', () => addInfoHtml(restaurant));
+  }
+}
+
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+navigator.geolocation.getCurrentPosition(success, error, options);
+
+function addInfoHtml(restaurant) {
+  closeModal();
+  modal = document.querySelector('#Tiedot');
+  if (modal) {
+    modal.innerHTML += `
+    <div class="modal">
+      <div class="modal-content">
+        <h1> ${restaurant.name}</h1>
+        <p> ${restaurant.address}</p>
+      </div>
+    </div>
+    `;
+  }
+}
+
+function closeModal() {
+  const modal = document.querySelector('#Tiedot');
+  modal.innerHTML = '';
+}

@@ -810,7 +810,10 @@ for (const restaurant of restaurants) {
     const phoneP = document.createElement('p');
     phoneP.innerText = restaurant.phone;
 
-    modal.append(nameH3, addressP, cityP, postalP, phoneP);
+    const company = document.createElement('p');
+    company.innerText = restaurant.company;
+
+    modal.append(nameH3, addressP, cityP, postalP, phoneP, company);
   });
   //nimisolu
   const nameTd = document.createElement('td');

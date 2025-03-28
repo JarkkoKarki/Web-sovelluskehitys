@@ -27,6 +27,7 @@ const todoList = [
   },
 ];
 
+// add your code here
 const ul = document.querySelector('ul');
 
 for (let item of todoList) {
@@ -43,5 +44,3 @@ for (let item of todoList) {
   li.appendChild(label);
   ul.appendChild(li);
 }
-
-// add your code here
