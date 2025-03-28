@@ -15,7 +15,7 @@ async function init() {
       body: JSON.stringify(user),
     };
     const userData = await fetchData(url, options);
-    console.log('POST: ', userData);
+    console.log('(T2) POST: ', userData);
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -25,7 +25,7 @@ async function get() {
   try {
     const url = 'https://reqres.in/api/users?/page=2';
     const userData = await fetchData(url);
-    console.log('GET: ', userData);
+    console.log('(T1) GET: ', userData);
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -46,7 +46,7 @@ async function put() {
       body: JSON.stringify(user),
     };
     const userData = await fetchData(url, options);
-    console.log('PUT: ', userData);
+    console.log('(T4) PUT: ', userData);
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -56,9 +56,9 @@ async function getError() {
   try {
     const url = 'https://reqres.in/api/unknown/23';
     const userData = await fetchData(url);
-    console.log('GET Error: ', userData);
+    console.log('(T3) GET Error: ', userData);
   } catch (error) {
-    console.error('An error occurred wrong url:', error);
+    console.error('(T3) An error occurred wrong url:', error);
   }
 }
 

@@ -44,7 +44,10 @@ const createRestaurantCells = (restaurant, tr) => {
   tr.append(nameTd, addressTd, cityTd);
 };
 */
-const restaurantModal = ({name, address, city, postalCode, phone}, modal) => {
+const restaurantModal = (
+  {name, address, city, postalCode, phone, company},
+  modal
+) => {
   const restaurantName = document.createElement('h1');
   restaurantName.innerText = name;
 
@@ -60,7 +63,10 @@ const restaurantModal = ({name, address, city, postalCode, phone}, modal) => {
   const phoneP = document.createElement('p');
   phoneP.innerText = phone;
 
-  modal.append(restaurantName, addressP, cityP, postalP, phoneP);
+  const companyNameP = document.createElement('p');
+  companyNameP.innerText = `Ravintola: ${company}`;
+
+  modal.append(restaurantName, addressP, cityP, postalP, phoneP, companyNameP);
 };
 
 const createMenuHtml = (courses) => {
@@ -105,8 +111,15 @@ const sortRestaurants = () => {
   restaurants.sort(sortByName);
 };
 
-const createTable = () => {
-  for (const restaurant of restaurants) {
+const createTable = (filteredRestaurants = restaurants) => {
+  taulukko.innerHTML = '';
+  if (filteredRestaurants.length === 0) {
+    const noDataMessage = document.createElement('p');
+    noDataMessage.innerText = 'No restaurants found';
+    taulukko.append(noDataMessage);
+    return;
+  }
+  filteredRestaurants.forEach((restaurant) => {
     // rivi
     const tr = document.createElement('tr');
 
@@ -137,7 +150,24 @@ const createTable = () => {
 
     RestaurantRow(restaurant, tr);
     taulukko.append(tr);
-  }
-};
+  });
 
+  const filterRestaurants = (companyName) => {
+    return restaurants.filter(({company}) => company === companyName);
+  };
+
+  document.querySelector('#show-all').addEventListener('click', () => {
+    createTable(restaurants);
+  });
+
+  document.querySelector('#sodexo').addEventListener('click', () => {
+    const sodexoRestaurants = filterRestaurants('Sodexo');
+    createTable(sodexoRestaurants);
+  });
+
+  document.querySelector('#compass').addEventListener('click', () => {
+    const compassRestaurants = filterRestaurants('Compass Group');
+    createTable(compassRestaurants);
+  });
+};
 export default {getRestaurants, sortRestaurants, createTable};
